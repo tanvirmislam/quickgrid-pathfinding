@@ -1,4 +1,4 @@
-# Quickgrid Pathfinding
+# Quickgrid
 Implement pathfinding algorithms on grids using C++!
 
 The goal of this project was to build a skeleton where a pathfinding algorithm can be implemented quickly without worrying about reading from a text file, printing outputs, or creating extra classes to oraginze the implementation.
