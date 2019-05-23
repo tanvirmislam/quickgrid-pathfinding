@@ -6,3 +6,5 @@ The goal of this project was to build a skeleton where a pathfinding algorithm c
 Grids are .txt files, saved in impl/grid/
 
 The .cpp files havint the pathfinding algorithms are in impl folder. The utility code is stored in includes folder.
+
+![](demo.gif)
