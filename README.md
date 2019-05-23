@@ -7,4 +7,7 @@ Input grids here are .txt files, saved in impl/grid/
 
 The .cpp files having the pathfinding algorithms are in impl folder. The utility code is stored in includes folder.
 
+
+Here's a demo of the A* algorithm running on a given grid with obstacles between the start and end node:
+
 ![](demo.gif)
