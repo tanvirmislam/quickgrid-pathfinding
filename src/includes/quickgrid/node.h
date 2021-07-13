@@ -1,20 +1,17 @@
-#ifndef __SQUARE_H__
-#define __SQUARE_H__
+#ifndef __QUICKGRID_CANVAS_NODE_H__
+#define __QUICKGRID_CANVAS_NODE_H__
 
 #include <vector>
 #include <utility>
 #include <limits>
-
-#define DISCOVERED '+'
-#define EVALUATED  '='
-#define PATH       '*'
+#include "symbols.h"
 
 #define FLOAT_MAX std::numeric_limits<float>::max()
 
 class Node {
 private:
-	int  row;
-	int  col;
+	int row;
+	int col;
 	char symbol;
 
 	float h;
@@ -30,29 +27,29 @@ public:
 
 	void setSymbol(char c);
 
-	int  getRow();
-	int  getCol();
-	char getSymbol();
+	int getRow() const;
+	int getCol() const;
+	char getSymbol() const;
 
 	void setH(float val);
 	void setG(float val);
 	void setF(float val);
 
-       	float getH() const;
+	float getH() const;
 	float getG() const;
 	float getF() const;
 
 	void addNeighbor(std::pair<int, int> coord);
-	std::vector<std::pair<int, int>> getNeighborCoords();
+	std::vector<std::pair<int, int>> getNeighborCoords() const;
 
-	void setParent(Node*& sq);
-	Node* getParent();
+	void setParent(Node*& node);
+	Node* getParent() const;
 
-	bool isObstacle();
+	bool isObstacle() const;
 
-	void discovered();
-	void evaluated();
-	void path();
+	void setAsDiscovered();
+	void setAsEvaluated();
+	void setAsPath();
 };
 
 #endif

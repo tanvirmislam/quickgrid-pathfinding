@@ -5,25 +5,29 @@
 #include <utility>
 #include <limits>
 
-#include "quickgrid.h"
+#include "astar.h"
 
-using namespace std;
+AStar::AStar() {}
 
-Node* getMin(unordered_set<Node*>& sqSet) {
-	Node* outputSq = nullptr;
-	float minF = numeric_limits<float>::max();
+Node* AStar::getMin(std::unordered_set<Node*>& nodeSet) {
+	Node* outputNode = nullptr;
+	float minF = std::numeric_limits<float>::max();
 
-	for (Node* sq : sqSet) {
-		if (sq->getF() < minF) {
-			minF = sq->getF();
-			outputSq = sq;
+	for (auto& node : nodeSet) {
+		if (node->getF() < minF) {
+			minF = node->getF();
+			outputNode = node;
 		}
 	}
 
-	return outputSq;
+	return outputNode;
 }
 
-void runAStar(Canvas* canvas) {
+bool AStar::run(Canvas* canvas) {
+	if (canvas->isEmpty()) {
+		return false;
+	}
+
 	Node* start = canvas->getStart();
 	Node* end   = canvas->getEnd();
 
@@ -31,50 +35,59 @@ void runAStar(Canvas* canvas) {
 	start->setH(canvas->getDist(start, end));
 	start->setF(start->getH());	
 
-	unordered_set<Node*> closedSet;
+	std::unordered_set<Node*> closedSet;
 	
-	unordered_set<Node*> openSet;
+	std::unordered_set<Node*> openSet;
 	openSet.insert(start);
 
 	while (!openSet.empty()) {
 		Node* current = getMin(openSet);
 		
 		if (current == end) {
+			// Target node found
 			Node* trace = end->getParent();
+
 			while (trace != start) {
-				trace->path();
+				trace->setAsPath();
 				trace = trace->getParent();
 			}
-			break;
+
+			return true;
 		}
 
 		openSet.erase(current);
 		closedSet.insert(current);
 		
 		if (current != start && current != end) {
-			current->evaluated();
+			current->setAsEvaluated();
 		}
 
 		for (auto& coord : current->getNeighborCoords()) {
 			Node* neighbor = canvas->get(coord);
 			
 			if (closedSet.find(neighbor) != closedSet.end()) {
+				// This node has already been evaluated
 				continue;
 			}
 
+			// Tentative cost to visit this node
 			float tentativeG = current->getG() + canvas->getDist(current, neighbor);
 
 			if (openSet.find(neighbor) == openSet.end()) {
+				// This node has been newly discovered
 				openSet.insert(neighbor);
 				
 				if (neighbor != end) {
-					neighbor->discovered();
+					neighbor->setAsDiscovered();
 				}
 			}
 			else if (tentativeG >= neighbor->getG()) {
+				// This node was previously discovered and the cost was less
+				// Don't update the cost
 				continue;
 			}
-			
+
+			// Update the cost to visit this node
 			neighbor->setG(tentativeG);
 			neighbor->setH(canvas->getDist(neighbor, end));
 			neighbor->setF(neighbor->getG() + neighbor->getH());
@@ -83,22 +96,7 @@ void runAStar(Canvas* canvas) {
 
 		canvas->draw();
 	}
-	
-}
 
-
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		cout << "usage: ./run <filename>" << endl;
-		exit(1);
-	}
-
-	string filename = argv[1];
-
-	Canvas* canvas = new Canvas(filename);	
-	runAStar(canvas);
-	canvas->draw(0);
-
-	delete canvas;
-	return 0;  
+	// Target node not found
+	return false;
 }

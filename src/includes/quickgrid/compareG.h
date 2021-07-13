@@ -1,7 +1,7 @@
-#ifndef __COMPARATOR_H__
-#define __COMPARATOR_H__
+#ifndef __G_VALUE_COMPARATOR_H__
+#define __G_VALUE_COMPARATOR_H__
 
-#include "Node.h"
+#include "node.h"
 
 class CompareG {
 public:

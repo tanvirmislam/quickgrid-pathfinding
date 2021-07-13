@@ -1,39 +1,33 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <unordered_set>
-#include <unordered_map>
-#include <queue>
-#include <utility>
+#include "dijkstra.h"
 
-#include "quickgrid.h"
+Dijkstra::Dijkstra() {}
 
-using namespace std;
-
-void runDijkstra(Canvas* canvas) {
+bool Dijkstra::run(Canvas* canvas) {
 	Node* start = canvas->getStart();
 	Node* end   = canvas->getEnd();
 
 	start->setG(0.0);
 
-	priority_queue<Node*, vector<Node*>, CompareG> pq;
+	std::priority_queue<Node*, std::vector<Node*>, CompareG> pq;
 	pq.push(start);
-	
+
 	while (!pq.empty()) {
 		Node* current = pq.top();
 		pq.pop();
 
 		if (current == end) {
 			Node* temp = current->getParent();
+
 			while (temp != start) {
-				temp->path();
+				temp->setAsPath();
 				temp = temp->getParent();
 			}
-			break;
+
+			return true;
 		}
 	
 		if (current != start && current != end) {
-			current->evaluated();
+			current->setAsEvaluated();
 		}
 
 		for (auto& coord : current->getNeighborCoords()) {
@@ -48,7 +42,7 @@ void runDijkstra(Canvas* canvas) {
 				pq.push(neighbor);
 
 				if (neighbor != start && neighbor != end) {
-					neighbor->discovered();
+					neighbor->setAsDiscovered();
 				}
 			}
 						
@@ -56,19 +50,6 @@ void runDijkstra(Canvas* canvas) {
 		
 		canvas->draw();
 	}
-}
 
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		cout << "usage: ./rundijkstra <filename>" << endl;
-		exit(1);
-	}
-	string filename(argv[1]);
-
-	Canvas* canvas = new Canvas(filename);
-	runDijkstra(canvas);
-	canvas->draw(0);
-
-	delete canvas;
-	return 0;  
+	return false;
 }

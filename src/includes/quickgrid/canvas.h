@@ -1,7 +1,6 @@
-#ifndef __CANVAS_H__
-#define __CANVAS_H__
+#ifndef __QUICKGRID_CANVAS_H__
+#define __QUICKGRID_CANVAS_H__
 
-#include "Node.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,25 +8,30 @@
 #include <utility>
 #include <math.h>
 #include <unistd.h>
+#include <term.h>
+#include "node.h"
+#include "symbols.h"
 
-#define DEFAULT_INTERVAL 15000
+#define DEFAULT_INTERVAL 500000
 
 class Canvas {
 private:
 	std::vector<std::vector<Node*>> grid;
-	 
+
 	int rows;
 	int cols;
-	
+
 	std::pair<int, int> start;
 	std::pair<int, int> end;
 
-	void readGrid(std::string filename);
+	void readGrid(std::string filepath);
 	void assignNeighbors();
 
 public:
-	Canvas(std::string filename); 	
+	Canvas(std::string filepath); 	
 	~Canvas();
+
+	bool isEmpty();
 
 	Node* getStart();
 	Node* getEnd();
