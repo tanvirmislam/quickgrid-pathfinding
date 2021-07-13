@@ -12,7 +12,7 @@
 #include "node.h"
 #include "symbols.h"
 
-#define DEFAULT_INTERVAL 500000
+#define DEFAULT_INTERVAL 40000
 
 class Canvas {
 private:
